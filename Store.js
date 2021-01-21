@@ -10,10 +10,11 @@ class Store {
         this.data = parseDataFile(this.path, options.defaults)
     }
 
+    // Get data
     get(key) {
         return this.data[key]
     }
-
+    // Set Data
     set (key, val) {
         this.data[key] = val
         fs.writeFileSync(this.path, JSON.stringify(this.data))

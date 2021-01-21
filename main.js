@@ -15,7 +15,7 @@ const store = new Store({
   configName: 'user-settings',
   defaults: {
     settings: {
-      cpuOverLoad: 80,
+      cpuOverload: 80,
       alertFrequency: 5,
     }
   }
@@ -42,6 +42,11 @@ function createMainWindow() {
 
 app.on('ready', () => {
   createMainWindow()
+
+  // Send settings to dom on main window
+    mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.webContents.send('settings:get', store.get('settings'))
+  })
 
   const mainMenu = Menu.buildFromTemplate(menu)
   Menu.setApplicationMenu(mainMenu)
