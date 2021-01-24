@@ -56,6 +56,14 @@ app.on('ready', () => {
   const mainMenu = Menu.buildFromTemplate(menu)
   Menu.setApplicationMenu(mainMenu)
 
+  // Do not quit app on exit icon, app hides in task bar
+  mainWindow.on('close', e => {
+    if (!app.isQuitting) {
+      e.preventDefault()
+      mainWindow.hide()
+    }
+  })
+
   const icon = path.join(__dirname, 'assets', 'icons', 'tray_icon.png')
 
   // Create tray icon
@@ -70,7 +78,20 @@ app.on('ready', () => {
     }
   })
 
-  mainWindow.on('ready', () => (mainWindow = null))
+  // Quit app from right click on task bar
+  tray.on('right-click', () => {
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Quit',
+        click: () => {
+          app.isQuitting = true
+          app.quit()
+        }
+      }
+    ])
+
+    tray.popUpContextMenu(contextMenu)
+  })
 })
 
 const menu = [
